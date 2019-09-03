@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from requests import Session
 from lxml import html
-from os import mkdir, path
+from os import mkdir, makedirs, path
 from urllib import parse
 from getpass import getpass
 from re import sub, search
@@ -19,6 +19,7 @@ COURSE_URL = ''
 CANVAS_URL = ''
 COURSE_ID = ''
 CANVAS_LOGIN_URL = ''
+DOWNLOAD_PATH = 'modules/'
 
 
 def login(username, password, session):
@@ -78,7 +79,7 @@ def download_item(module, item, session):
     filename = clean_file_name(item.name)        
     moduleFilename = clean_file_name(module.name)
 
-    fullPath = "modules/{0}/{1}".format(moduleFilename, filename)
+    fullPath = "{0}{1}/{2}".format(DOWNLOAD_DIR, moduleFilename, filename)
 
     print("  - Downloading ({0}-{1}) {2}...".format(item.itemType, item.itemId, item.name))
 
@@ -120,17 +121,17 @@ def get_modules(session):
 
 
 def download_modules(modules, session):
-    if not path.exists("modules"):
-        mkdir("modules")
+    if not path.exists(DOWNLOAD_DIR):
+        makedirs(DOWNLOAD_DIR)
 
     for mod in modules:
         print("\nDownloading Module {0}...".format(mod.name))
 
         modDirName = clean_file_name(mod.name)
-        modPath = "modules/" + modDirName
+        modPath = DOWNLOAD_DIR + modDirName
 
         if not path.exists(modPath):
-            mkdir(modPath)
+            makedirs(modPath)
 
         for item in mod.items:
             download_item(mod, item, session)
@@ -138,7 +139,7 @@ def download_modules(modules, session):
 
 
 def main():
-    global CANVAS_URL, COURSE_ID, CANVAS_LOGIN_URL, COURSE_URL
+    global CANVAS_URL, COURSE_ID, CANVAS_LOGIN_URL, COURSE_URL, DOWNLOAD_DIR
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-u', '--username', required=True, help=("Username in "
@@ -149,6 +150,8 @@ def main():
         "Canvas course e.g. https://floridapolytechnic.instructure.com/"
         "courses/2242. Make sure you include https:// in the url."
         ))
+    parser.add_argument('-d', '--download-dir', help="Path to download folder",
+            default="modules/")
 
     args = parser.parse_args()
 
@@ -156,6 +159,7 @@ def main():
     password = getpass('Please enter your school password: ')
     courseUrl = parse.urlparse(args.course_url)
 
+    DOWNLOAD_DIR = parse.urlparse(args.download_dir).path
 
     CANVAS_URL = "{0}://{1}".format(courseUrl.scheme, courseUrl.netloc)
     CANVAS_LOGIN_URL = CANVAS_URL + "/login/saml"
@@ -175,7 +179,7 @@ def main():
     modules = get_modules(session)
     download_modules(modules, session)
 
-    print("\nAll modules are downloaded!")
+    print("\nAll modules are downloaded to ", DOWNLOAD_DIR)
 
     
 
