@@ -14,3 +14,6 @@ Then run using:
 
 For additional help, run:
 `python3 canvas-downloader.py --help`
+
+## If using for multiple courses...
+Remember to delete the modules folder if downloading different course
