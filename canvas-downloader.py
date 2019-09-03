@@ -11,7 +11,6 @@ import argparse
 
 from utilities import (session_get, session_post, clean_file_name,
         download_file, dump)
-from constants import CANVAS_URL, CANVAS_LOGIN_URL
 from Module import Module
 from ModuleItem import ModuleItem
 
