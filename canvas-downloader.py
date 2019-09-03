@@ -97,7 +97,7 @@ def get_modules(session):
 
     modules = [ ]
 
-    resp = session_get('{0}/courses/3201/modules'.format(CANVAS_URL), session)
+    resp = session_get('{0}/courses/{1}/modules'.format(CANVAS_URL, COURSE_ID), session)
     tree = html.fromstring(resp.content)
     moduleNodes = tree.xpath("//div[contains(@class, 'context_module') and contains(@class, 'item-group-condensed')]")
 
