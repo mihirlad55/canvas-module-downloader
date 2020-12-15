@@ -160,6 +160,9 @@ def main():
     courseUrl = parse.urlparse(args.course_url)
 
     DOWNLOAD_DIR = parse.urlparse(args.download_dir).path
+    # Append a forward slash if not provided
+    if DOWNLOAD_DIR[-1] != '/':
+        DOWNLOAD_DIR += '/'
 
     CANVAS_URL = "{0}://{1}".format(courseUrl.scheme, courseUrl.netloc)
     CANVAS_LOGIN_URL = CANVAS_URL + "/login/saml"
