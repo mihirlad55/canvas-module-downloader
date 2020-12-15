@@ -39,6 +39,8 @@ def clean_file_name(name):
     name = sub("\'", "", name)
     # Remove all other non-alpha/dash/underscore characters
     name = sub("[^\w\-\.]", "-", name)
+    # Replace consecutive dashes with one
+    name = sub("\-+", '-', name)
     # Make lowercase
     name = name.lower()
 
